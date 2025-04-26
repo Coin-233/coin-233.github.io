@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "echo VITE_COMMIT_ID=$(git rev-parse HEAD) > .env && tsc -b && vite build",
+    "build": "echo VITE_COMMIT_ID=$(git rev-parse --short HEAD) > .env && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
