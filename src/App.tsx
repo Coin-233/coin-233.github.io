@@ -1,11 +1,18 @@
+import { useState } from 'react';
 import Header from './components/Header'
 import Quote from './components/Quote'
 import Section from './components/Section'
 import ContactButtons from './components/ContactButtons'
 import { IoIosGitBranch } from "react-icons/io";
 import { motion } from 'framer-motion'
+import Terminal from './components/Terminal';
 
 function App() {
+    const [clickCount, setClickCount] = useState(0)
+
+    const handleLocationClick = () => {
+        setClickCount(prev => prev + 1)
+    }
     return (
         <motion.div
             className="container"
@@ -13,7 +20,14 @@ function App() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
         >
-            <p className="location">&gt; here</p>
+            {/*<p className="location">&gt; here</p>*/}
+            {clickCount < 5 ? (
+                <p className="location" onClick={handleLocationClick}>
+                    &gt; here
+                </p>
+            ) : (
+                <Terminal />
+            )}
             <Header />
             <Quote />
             <p><strong>空白</strong> 是一个普通的互联网用户。</p>
