@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Zen+Old+Mincho&display=swap');
+
+:root {
+  --bg-color: #1e1e2f;
+  --text-color: #d8d8e8;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-color: #f7f7ff;
+    --text-color: #222;
+  }
+}
+a{
+  text-decoration:none;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: "Noto Sans", sans-serif;
+  margin: 40px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+}
+
+.location {
+  font-family: monospace;
+  color: #999;
+  margin-bottom: 10px;
+}
+
+.nav a {
+  color: #ff6b6b;
+  margin-right: 15px;
+  text-decoration: none;
+}
+
+.nav a:hover {
+  text-decoration: underline;
+}
+
+.quote {
+  margin: 20px 0;
+  font-style: italic;
+}
+
+.section {
+  margin-top: 40px;
+}
+
+.section h2 {
+  font-size: 1.5em;
+  border-bottom: 1px solid #444;
+  padding-bottom: 5px;
+}
+
+ul {
+  margin-left: 20px;
+  line-height: 1.6;
+}
+
+.buttons a {
+  display: inline-block;
+  color: #fff;
+  padding: 8px 16px;
+  margin: 5px 10px 5px 0;
+  border-radius: 5px;
+  font-size: 0.9em;
+  text-decoration: none;
+  transition: transform 0.2s;
+}
+
+.buttons a:hover {
+  transform: scale(1.05);
+}
+
+footer {
+  margin-top: 50px;
+  text-align: center;
+  font-size: 0.8em;
+  color: #888;
+}
+
+.quote-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  width: 100%;
+  max-width: 700px;
+  min-height: 150px;
+  margin: 40px auto;
+  padding: 30px 20px;
+
+  border-top: 1px solid #666;
+  cursor: pointer;
+  user-select: none;
+
+  transition: background-color 0.3s;
+}
+
+.quote-container:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.quote-text {
+  margin: 10px auto;
+  font-size: 1.4em;
+  line-height: 1.6;
+  color: #ddd;
+  text-align: left;
+}
+
+.quote-text{
+  font-family: "Zen Old Mincho", serif;
+}
+
+.quote-source {
+  margin: 10px auto;
+  margin-inline-end: 40px;
+  text-align: right;
+  color: #aaa;
+}
+
