@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import * as React from "react";
 
 function Terminal() {
     const [input, setInput] = useState('');
