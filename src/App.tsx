@@ -3,7 +3,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Layout from './components/Layout'
 import ScrollToTop from './components/ScrollToTop.tsx';
 import Home from './pages/Home.tsx';
-import About from './pages/About'
+import About from './pages/About';
+import CY from './components/CY'
 
 function App() {
     const location = useLocation();
@@ -16,6 +17,7 @@ function App() {
                     <Routes location={location} key={location.pathname}>
                         <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
                         <Route path="/about" element={<PageWrapper><About /></PageWrapper>} />
+                        <Route path="/CY" element={<CY />} />
                     </Routes>
                 </AnimatePresence>
             </Layout>
