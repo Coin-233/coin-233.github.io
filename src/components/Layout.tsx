@@ -14,8 +14,8 @@ function Layout({ children }: LayoutProps) {
                 {children}
             </main>
             <footer>
-                Last Update {import.meta.env.VITE_BUILD_DATE} <br />
-                <IoIosGitBranch /> {import.meta.env.VITE_COMMIT_ID} <br/><br/>
+                Last Update {__BUILD_DATE__} <br />
+                <IoIosGitBranch /> {__COMMIT_ID__} <br/><br/>
                 <span title="Copyright 2025 All rights reserved">©2025 保留所有右边</span>
             </footer>
         </div>
