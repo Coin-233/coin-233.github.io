@@ -37,12 +37,6 @@ const contacts = [
         color: '#171a21'
     },
     {
-        name: 'Telegram',
-        href: 'https://t.me/Coin9111',
-        icon: <RiTelegram2Fill/>,
-        color: '#0088cc'
-    },
-    {
         name: 'Twitter',
         href: 'https://twitter.com/Coin_233',
         icon: <FaTwitter />,
