@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { FaBilibili, FaEnvelope,FaQq   } from "react-icons/fa6";
 import { FaGithub, FaSteam, FaTwitter } from 'react-icons/fa'
 import { SiOsu } from "react-icons/si";
-import { RiTelegram2Fill } from "react-icons/ri";
+// import { RiTelegram2Fill } from "react-icons/ri";
 // import BGM from '../assets/bangumi.svg?react'
 
 const contacts = [
