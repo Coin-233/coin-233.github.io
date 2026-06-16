@@ -3,7 +3,7 @@ import './App.css';
 
 const EXTERNAL_IMAGES = [
   "https://img.sakuras.in/uploads/20260523/604aa3f6cc450df0f6460df7dcc8c93b.jpg",
-  "https://img.sakuras.in/uploads/20260523/348b5048d2636bf81086a2733dbdd851.jpg",
+  // "https://img.sakuras.in/uploads/20260523/348b5048d2636bf81086a2733dbdd851.jpg",
   "https://img.sakuras.in/uploads/20260523/ace31f05f9a64b3a89d9b631a09e05ee.jpg",
   "https://img.sakuras.in/uploads/20260523/0e25efe12c3d8c15fc8a73680faebca2.jpg",
   "https://img.sakuras.in/uploads/20260523/732dec2bc52b8ced9af0fd1bc151c775.png",
@@ -13,10 +13,19 @@ const EXTERNAL_IMAGES = [
 const App: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [offsetX, setOffsetX] = useState(0);
   const lastSnapOffsetRef = useRef(0);
+
   const autoPlayTimerRef = useRef<number | null>(null);
 
   // 轮播
@@ -51,8 +60,9 @@ const App: React.FC = () => {
     setCurrentIndex(index);
     setIsGalleryOpen(false);
   };
-  
+
   const handlePointerDown = (e: React.TouchEvent | React.MouseEvent) => {
+    if (isGalleryOpen) return;
     setIsDragging(true);
     setOffsetX(0);
     lastSnapOffsetRef.current = 0;
@@ -62,7 +72,7 @@ const App: React.FC = () => {
   };
 
   const handlePointerMove = (e: React.TouchEvent | React.MouseEvent) => {
-    if (!isDragging) return;
+    if (!isDragging || isGalleryOpen) return;
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     setOffsetX(clientX - startX);
   };
@@ -74,13 +84,13 @@ const App: React.FC = () => {
     lastSnapOffsetRef.current = offsetX;
     
     // 有效切换值
-    const threshold = 100; 
+    const threshold = isMobile ? 80 : 100; 
     
     if (offsetX > threshold) handlePrev();
     else if (offsetX < -threshold) handleNext();
     else startAutoPlay();
     
-    setOffsetX(0);
+    setOffsetX(0); 
   };
 
   return (
@@ -100,46 +110,46 @@ const App: React.FC = () => {
           if (Math.abs(diff) > 1) return null;
 
           const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1000;
-          const percent = Math.max(-1, Math.min(1, offsetX / (screenWidth * 0.5)));
+          const percent = Math.max(-1, Math.min(1, offsetX / (isMobile ? screenWidth : screenWidth * 0.5)));
 
           let opacity = diff === 0 ? 1 : 0;
-          
-          if (isDragging) {
-            if (diff === 0) {
-              opacity = 1 - Math.abs(percent);
-            } else if (diff === 1 && percent < 0) {
-              opacity = Math.abs(percent);
-            } else if (diff === -1 && percent > 0) {
-              opacity = Math.abs(percent);
+          let translateX = diff * 100;
+
+          if (isMobile) {
+            opacity = 1;
+            if (isDragging) {
+              translateX = diff * 100 + percent * 100;
+            }
+          } else {
+            if (isDragging) {
+              if (diff === 0) opacity = 1 - Math.abs(percent);
+              else if (diff === 1 && percent < 0) opacity = Math.abs(percent);
+              else if (diff === -1 && percent > 0) opacity = Math.abs(percent);
             }
           }
 
           let zIndex = 1;
-          
-          if (isDragging) {
-            if (diff === 0) zIndex = 1;
-            else if ((diff === 1 && percent < 0) || (diff === -1 && percent > 0)) {
-              zIndex = 2;
-            }
-          } else {
-            if (diff === 0) {
-              zIndex = 2;
-            } else if (
-              (diff === -1 && lastSnapOffsetRef.current < 0) ||
-              (diff === 1 && lastSnapOffsetRef.current > 0)
-            ) {
-              zIndex = 1;
+          if (!isMobile) {
+            if (isDragging) {
+              if (diff === 0) zIndex = 1;
+              else if ((diff === 1 && percent < 0) || (diff === -1 && percent > 0)) zIndex = 2;
+            } else {
+              if (diff === 0) zIndex = 2;
+              else if ((diff === -1 && lastSnapOffsetRef.current < 0) || (diff === 1 && lastSnapOffsetRef.current > 0)) zIndex = 1;
             }
           }
+
+          const snapClass = !isDragging ? (isMobile ? 'snap-transition-mobile' : 'snap-transition-pc') : '';
 
           return (
             <img 
               key={index} 
               src={src} 
-              className={`bg-image-layer ${!isDragging ? 'snap-transition' : ''}`}
+              className={`bg-image-layer ${snapClass}`}
               style={{
-                opacity: opacity,
-                zIndex: zIndex
+                opacity: isMobile ? 1 : opacity,
+                transform: isMobile ? `translateX(${translateX}%)` : 'none',
+                zIndex: isMobile ? 1 : zIndex
               }}
               alt="bg" 
               draggable={false}
@@ -148,7 +158,7 @@ const App: React.FC = () => {
         })}
       </div>
 
-      <header className="top-nav-bar">
+      <header className={`top-nav-bar ${isGalleryOpen && isMobile ? 'hidden' : ''}`}>
         <nav>
           <a href="#home">HOME GALLERY</a>
           <a href="#info">INFORMATION</a>
@@ -173,8 +183,8 @@ const App: React.FC = () => {
         
         <button className="fixed-toggle-btn" onClick={() => setIsGalleryOpen(!isGalleryOpen)}>
           {isGalleryOpen ? (
-            <svg viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="3">
-              <circle cx="12" cy="12" r="11" fill="white" stroke="none" />
+            <svg viewBox="0 0 24 24" fill="none" stroke={isMobile ? "white" : "black"} strokeWidth="3">
+              <circle cx="12" cy="12" r="11" fill={isMobile ? "transparent" : "white"} stroke={isMobile ? "white" : "none"} strokeWidth={isMobile ? "2" : "0"} />
               <line x1="16" y1="8" x2="8" y2="16"></line>
               <line x1="8" y1="8" x2="16" y2="16"></line>
             </svg>
@@ -189,8 +199,8 @@ const App: React.FC = () => {
         </button>
       </div>
 
-      {/* 画廊列表背景 */}
-      <div className={`bottom-gallery-transparent-bar ${isGalleryOpen ? 'open' : ''}`}>
+      {/* 画廊列表 */}
+      <div className={`gallery-container ${isGalleryOpen ? 'open' : ''}`}>
         <div className="gallery-thumbnail-track">
           {EXTERNAL_IMAGES.map((src, index) => (
             <div 
