@@ -30,7 +30,7 @@ function PageWrapper({ children }: { children: React.ReactNode }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -30 }}
             transition={{ duration: 0.4, ease: 'easeInOut' }}
-            style={{ minHeight: 'calc(100vh - 120px)', padding: '20px' }} // 保持页面有些padding
+            style={{ minHeight: 'calc(100vh - 120px)'}}
         >
             {children}
         </motion.div>
