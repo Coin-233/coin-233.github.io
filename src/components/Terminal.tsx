@@ -1,5 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 
+const visitorCountPromise = fetch('https://moe-counter.sakuras.in/@coin233-hpg?name=coin233-hpg')
+    .then(res => res.text())
+    .then(svgText => {
+        const matches = [...svgText.matchAll(/(?:xlink:href|href)="#(\d+)"/gi)];
+        return matches.map(match => match[1]).join('');
+    })
+    .catch(error => {
+        console.error("Failed to fetch counter:", error);
+        return null;
+    });
+
 function Terminal() {
     const [input, setInput] = useState('');
     const [history, setHistory] = useState<string[]>([]);
@@ -22,6 +33,7 @@ function Terminal() {
 
     // 初始信息
     useEffect(() => {
+        let isMounted = true;
         setOutput(['Ciallo～(∠·ω< )⌒☆']);
         console.log(` ________  ___  ________  ___       ___       ________        
 |\\   ____\\|\\  \\|\\   __  \\|\\  \\     |\\  \\     |\\   __  \\       
@@ -29,7 +41,22 @@ function Terminal() {
  \\ \\  \\    \\ \\  \\ \\   __  \\ \\  \\    \\ \\  \\    \\ \\  \\\\\\  \\     
   \\ \\  \\____\\ \\  \\ \\  \\ \\  \\ \\  \\____\\ \\  \\____\\ \\  \\\\\\  \\    
    \\ \\_______\\ \\__\\ \\__\\ \\__\\ \\_______\\ \\_______\\ \\_______\\   
-    \\|_______|\\|__|\\|__|\\|__|\\|_______|\\|_______|\\|_______|   `)
+    \\|_______|\\|__|\\|__|\\|__|\\|_______|\\|_______|\\|_______|   `);
+
+        visitorCountPromise.then(countStr => {
+            if (isMounted && countStr) {
+                setOutput(prev => {
+                    if (prev.some(line => line.includes('Total Visitors'))) {
+                        return prev;
+                    }
+                    return [...prev, `[System] Total Visitors: ${countStr}`];
+                });
+            }
+        });
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
