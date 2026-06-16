@@ -91,11 +91,15 @@ function Terminal() {
                 fontFamily: 'monospace',
                 background: '#111',
                 color: '#0f0',
-                padding: '8px',
+                padding: '12px',
                 borderRadius: '6px',
-                display: 'inline-block',
-                minWidth: '85vh',
+                display: 'block',
+                width: '100%',
+                boxSizing: 'border-box',
+                // minHeight: '50vh',
                 overflowY: 'auto',
+                overflowX: 'hidden',
+                wordBreak: 'break-all',
             }}
         >
             {output.map((line, idx) => (
